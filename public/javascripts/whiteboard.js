@@ -18,6 +18,7 @@ var newWhiteBoard = function() {
 	
 	function colorCoordinate(x, y) {
 		if(!isDrawing){
+			context.beginPath();
 		    context.moveTo(x,y-5);
 	    }  
 		context.lineTo(x+2,y-5+2);

@@ -5,7 +5,7 @@ This project was started as an experiment in a few new technologies. These being
 
 As users connect to the page, they can draw in the area given. When one user draws, their actions are broadcast to any other user viewing/drawing on that particular board.
 
-So far this has not received much work, as it has been mostly a tool to use some new tools/libraries. However, some ideas for moving forward:
-  - Clean up the interface and find a better way to handle the drawing. moving the mouse quickly leads to spaced out dots, not lines. This is likely due to the rate at which mousemove events are getting fired, but there must just be a better way to handle the drawing.
-  - allow users to start a new room to draw in so that all users are not automatically grouped on a single board. 
-    - allow users to watch the drawing of all boards simultaneously.
+So far this has not received much work, as it has been mostly a tool to use some new tools/libraries. However, some ideas for moving forward or known issues are:
+  - Clean up the interface and find a better way to handle the drawing. moving the mouse quickly leads to spaced out dots when broadcasting to other users. This is due to calls to "moveTo" on the canvas element which seems to be what slows things down if it gets called often. 
+  - There is no strong effort to deal with the obvious issues of having 2 people draw simultaneously. Handling the context and ensuring that drawing movements from any/all users are shown correctly as they happen on the fly simply hasn't been addressed or tested at all yet.
+  - maybe allow users to start a new room to draw in so that all users are not automatically grouped on a single board. 

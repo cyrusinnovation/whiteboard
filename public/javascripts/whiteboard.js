@@ -17,8 +17,9 @@ var newWhiteBoard = function() {
 	};
 	
 	function colorCoordinate(x, y) {
-		context.beginPath();
-		context.moveTo(x,y-5);
+		if(!isDrawing){
+		    context.moveTo(x,y-5);
+	    }  
 		context.lineTo(x+2,y-5+2);
 		context.stroke();
 	}
@@ -29,11 +30,14 @@ var newWhiteBoard = function() {
 		funcToCall();
 		context.strokeStyle = origColor	
 	}
-	theWhiteboard.startDrawing = function(){
+	theWhiteboard.startDrawingAt = function(x, y){
 		isDrawing = true;
+		context.beginPath();
+		colorCoordinate(x,y);
 	}
 	theWhiteboard.stopDrawing = function(){
 		isDrawing = false;
+		context.stroke();
 	}
 	theWhiteboard.setPenColor = function(color){
 		context.strokeStyle = color
@@ -56,15 +60,15 @@ $(document).ready(function() {
 	var whiteboard = newWhiteBoard();
 
 	$("#can").mousedown(function(e){
-		whiteboard.startDrawing();
-		whiteboard.drawAt(e.pageX, e.pageY);
+		whiteboard.startDrawingAt(e.layerX, e.layerY);
+		whiteboard.drawAt(e.layerX, e.layerY);
 	});
 	$("#can").mouseup(function(){
 		whiteboard.stopDrawing();
 	});
 
 	$("#can").mousemove(function(e) {
-		whiteboard.drawAt(e.pageX, e.pageY);	
+		whiteboard.drawAt(e.layerX, e.layerY);	
 	});
 
 	$("#clr > div").click(function(){

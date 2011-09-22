@@ -1,0 +1,11 @@
+This project was started as an experiment in a few new technologies. These being:
+  - node.js
+  - Websockets
+  - HTML5 Canvas
+
+As users connect to the page, they can draw in the area given. When one user draws, their actions are broadcast to any other user viewing/drawing on that particular board.
+
+So far this has not received much work, as it has been mostly a tool to use some new tools/libraries. However, some ideas for moving forward:
+  - Clean up the interface and find a better way to handle the drawing. moving the mouse quickly leads to spaced out dots, not lines. This is likely due to the rate at which mousemove events are getting fired, but there must just be a better way to handle the drawing.
+  - allow users to start a new room to draw in so that all users are not automatically grouped on a single board. 
+    - allow users to watch the drawing of all boards simultaneously.

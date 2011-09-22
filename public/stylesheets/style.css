@@ -1,0 +1,54 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif;
+}
+
+a {
+  color: #00B7FF;
+}
+
+*{
+	margin:0;
+	-webkit-user-select: none;
+	font-family: Georgia, sans-serif;
+}
+canvas{
+	cursor: crosshair;
+	border:black solid 1px;
+ }
+
+a{
+	font-size:20px;
+	text-decoration:none;
+	background:#4CA64C;
+	color:#fff;
+	padding:5px;
+ }
+
+#clr div{
+	cursor:pointer;
+	cursor:hand;
+	width:40px;
+	height:20px;
+	float:left;
+}
+img{
+ height:100px;
+ width:100px;
+ border:1px red solid;
+ margin-left:2px;
+ background:none;
+}
+
+body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td{margin:0;padding:0}
+#nav li{list-style:none}
+#nav{height:16px;margin-bottom:0px;
+font-family: Cambria, 'Hoefler Text', Utopia, 'Liberation Serif', 'Nimbus Roman No9 L Regular', Times, 'Times New Roman', serif;
+}#nav
+ul{float:right}
+#nav
+li{float:left;width:60px;text-align:center;border-left:1px solid #fff}
+#nav
+li a{display:block;color:#fff;font-size:85%;text-decoration:none;text-transform:uppercase;font-weight:normal;line-height:16px}
+#nav li.selected a{background-color:#000}
+#nav li a:hover{background-color:#333}

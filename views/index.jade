@@ -1,0 +1,18 @@
+head
+    link(href='/stylesheets/style.css', rel='stylesheet')
+    script(src='http://code.jquery.com/jquery-1.6.1.min.js')
+    script(src='/socket.io/socket.io.js')
+    script(src='/javascripts/whiteboard.js')
+
+canvas#can(height='500', width='599')
+#clr
+  div(style='background-color:black;')
+  div(style='background-color:white;')
+  div(style='background-color:red;')
+  div(style='background-color:green;')
+  div(style='background-color:orange;')
+  div(style='background-color:brown;')
+
+br
+br
+a#clear(href='#') Clear

@@ -5,7 +5,12 @@ This project was started as an experiment in a few new technologies. These being
 
 As users connect to the page, they can draw in the area given. When one user draws, their actions are broadcast to any other user viewing/drawing on that particular board.
 
-So far this has not received much work, as it has been mostly a tool to use some new tools/libraries. However, some ideas for moving forward or known issues are:
-  - Clean up the interface and find a better way to handle the drawing. moving the mouse quickly leads to spaced out dots when broadcasting to other users. This is due to calls to "moveTo" on the canvas element which seems to be what slows things down if it gets called often. 
-  - There is no strong effort to deal with the obvious issues of having 2 people draw simultaneously. Handling the context and ensuring that drawing movements from any/all users are shown correctly as they happen on the fly simply hasn't been addressed or tested at all yet.
-  - maybe allow users to start a new room to draw in so that all users are not automatically grouped on a single board. 
+Detail wise, each user gets a canvas DOM element assigned to them on each clients browser. This is done because a single HTML5 canvas element can only have a single context, and trying to simultaneously draw the actions of multiple users within a single context results in very poor results and also might just be kinda impossible to do well. As a result, it is currently implemented with a canvas per user.
+
+The drawing seems fairly smooth with a couple of users at once, but I have no idea what would happen with a lot of users yet. Moving forward, some ideas are:
+
+  - add users as an actual model on the server.
+  - allow users to create/join new rooms to start a new whiteboard session in.
+  - allow board owners to clear the board for all users.
+  - better/more drawing controls
+  - allow users to view multiple boards being drawn at once.

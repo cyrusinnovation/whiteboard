@@ -52,6 +52,14 @@ var newCanvasLayer = function(elem) {
 	return theCanvasLayer;
 }
 
+var newUserCanvas = function(id, width, height) {
+	var domID = "canvas_" + id;
+	var wrapper = $("#canvas_wrapper");
+	var canvasElem = $("<canvas id='" + domID + "' width='" + width + "' height='" + height + "'></canvas>");
+	wrapper.append(canvasElem);
+	return newCanvasLayer(canvasElem); 	
+}
+
 var newWhiteBoard = function() {
 	var theWhiteboard = {};
 	var otherLayers = {};
@@ -66,11 +74,6 @@ var newWhiteBoard = function() {
 			socketToServer.emit('drawing', x, y, myLayer.penColor);
 		}
 	};
-	
-	function newUserCanvas(id){
-		domID = "canvas_" + id;
-		return $("<canvas id='" + domID + "' width='" + canvas.width + "' height='" + canvas.height + "'></canvas>");
-	}
 	
 	theWhiteboard.startDrawingAt = function(x, y){
 	    myLayer.startDrawingAt(x, y)
@@ -91,10 +94,7 @@ var newWhiteBoard = function() {
 	};
 	
 	function addLayerFor(id) {
-	  	var wrapper = $("#canvas_wrapper");
-		var nextUserLayer = newUserCanvas(id);
-		wrapper.append(nextUserLayer);
-		otherLayers[id] = newCanvasLayer(nextUserLayer);	
+		otherLayers[id] = newUserCanvas(id, canvas.width, canvas.height);	
 	}
 	
 	socketToServer.on('start drawing', function(xCoord, yCoord, color, id) {

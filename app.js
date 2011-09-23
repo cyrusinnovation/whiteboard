@@ -36,12 +36,23 @@ app.get('/', function(req, res){
 });
 
 app.listen(3000);
-
+var currentID = 0;
 var io = sio.listen(app)
 
 io.sockets.on('connection', function (socket) {
+	socket.userID = ++currentID;
+	socket.emit('user count', currentID - 1);
+	socket.broadcast.emit('user joined', socket.userID);
+	
+	socket.on('start drawing', function(xCoord, yCoord, color){
+		socket.broadcast.emit('start drawing', xCoord, yCoord, color, socket.userID);
+	});
+	socket.on('stop drawing', function(){
+		socket.broadcast.emit('stop drawing', socket.userID);
+	});
+	
 	socket.on('drawing', function(xCoord, yCoord, color){
-	  socket.broadcast.emit('drawing', xCoord, yCoord, color);	
+	  socket.broadcast.emit('drawing', xCoord, yCoord, color, socket.userID);	
 	});
 });
 

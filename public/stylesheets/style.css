@@ -15,7 +15,14 @@ a {
 canvas{
 	cursor: crosshair;
 	border:black solid 1px;
+	position:absolute;
+	left:0px;
+	top:0px;
  }
+
+#my_canvas {
+	z-index: 999;
+}
 
 a{
 	font-size:20px;
@@ -25,6 +32,11 @@ a{
 	padding:5px;
  }
 
+div#bottom_panel {
+	position: absolute;
+	top:501px !important;
+	left: 0px;
+}
 #clr div{
 	cursor:pointer;
 	cursor:hand;
@@ -41,14 +53,3 @@ img{
 }
 
 body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,code,form,fieldset,legend,input,textarea,p,blockquote,th,td{margin:0;padding:0}
-#nav li{list-style:none}
-#nav{height:16px;margin-bottom:0px;
-font-family: Cambria, 'Hoefler Text', Utopia, 'Liberation Serif', 'Nimbus Roman No9 L Regular', Times, 'Times New Roman', serif;
-}#nav
-ul{float:right}
-#nav
-li{float:left;width:60px;text-align:center;border-left:1px solid #fff}
-#nav
-li a{display:block;color:#fff;font-size:85%;text-decoration:none;text-transform:uppercase;font-weight:normal;line-height:16px}
-#nav li.selected a{background-color:#000}
-#nav li a:hover{background-color:#333}

@@ -1,7 +1,7 @@
 
 var newWhiteBoard = function() {
 	var theWhiteboard = {};
-	var canvas = document.getElementById("can");
+	var canvas = document.getElementById("my_canvas");
 	var context = canvas.getContext('2d');
 	var isDrawing = false;
 	context.strokeStyle = 'red';
@@ -12,7 +12,7 @@ var newWhiteBoard = function() {
 	theWhiteboard.drawAt = function(x, y) {
 		if(isDrawing){
 			colorCoordinate(x,y);
-			socketToServer.emit('user drawing', x, y, context.strokeStyle);
+			socketToServer.emit('drawing', x, y, context.strokeStyle);
 		}
 	};
 	
@@ -48,27 +48,28 @@ var newWhiteBoard = function() {
 		context.fillRect(0, 0, canvas.width, canvas.height);
 	};
 	
-	socketToServer.on('user drawing', function(xCoord, yCoord, color){
+	socketToServer.on('drawing', function(xCoord, yCoord, color){
 		withColor(color, function(){
 			colorCoordinate(xCoord, yCoord);
 		})
 	});
 	
+	socketToServer.on	
 	return theWhiteboard;
 }
 
 $(document).ready(function() {
 	var whiteboard = newWhiteBoard();
 
-	$("#can").mousedown(function(e){
+	$("#my_canvas").mousedown(function(e){
 		whiteboard.startDrawingAt(e.layerX, e.layerY);
 		whiteboard.drawAt(e.layerX, e.layerY);
 	});
-	$("#can").mouseup(function(){
+	$("#my_canvas").mouseup(function(){
 		whiteboard.stopDrawing();
 	});
 
-	$("#can").mousemove(function(e) {
+	$("#my_canvas").mousemove(function(e) {
 		whiteboard.drawAt(e.layerX, e.layerY);	
 	});
 

@@ -40,8 +40,8 @@ app.listen(3000);
 var io = sio.listen(app)
 
 io.sockets.on('connection', function (socket) {
-	socket.on('user drawing', function(xCoord, yCoord, color){
-	  socket.broadcast.emit('user drawing', xCoord, yCoord, color);	
+	socket.on('drawing', function(xCoord, yCoord, color){
+	  socket.broadcast.emit('drawing', xCoord, yCoord, color);	
 	});
 });
 

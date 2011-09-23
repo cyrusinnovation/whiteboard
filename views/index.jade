@@ -4,7 +4,9 @@ head
     script(src='/socket.io/socket.io.js')
     script(src='/javascripts/whiteboard.js')
 
-canvas#can(height='500', width='599')
+
+#canvas_wrapper
+  canvas#my_canvas(height='500', width='599')
 #clr
   div(style='background-color:black;')
   div(style='background-color:white;')

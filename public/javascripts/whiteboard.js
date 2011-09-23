@@ -1,114 +1,126 @@
 
+var newCanvasLayer = function(elem) {
+	var theCanvasLayer = {};
+	var startingColor = 'red';
+	var canvasElem = elem;
+	var context = document.getElementById(elem.attr("id")).getContext("2d");
+	context.strokeStyle = 'red';
+	context.lineWidth = 5;
+	context.lineCap = "round";
+	var isDrawing = false;
+	
+	theCanvasLayer.startDrawingAt = function(xCoord, yCoord, color) {
+		isDrawing = true;
+		if(color) { //nasty. only when called by an event from another user
+		    context.strokeStyle = color;
+	    }
+		context.beginPath();
+	  	context.moveTo(xCoord, yCoord);
+	  	context.lineTo(xCoord+2, yCoord+2);
+	  	context.stroke();
+	};
+	
+	theCanvasLayer.continueDrawingAt = function(xCoord, yCoord, color) {
+		if(isDrawing) {
+			context.lineTo(xCoord+2, yCoord+2);
+			context.stroke();
+		}
+	}
+	
+	theCanvasLayer.stopDrawing = function() {
+		context.stroke();
+		isDrawing = false;
+	}
+	
+	theCanvasLayer.setColor = function(color) {
+		context.strokeStyle = color;
+	}
+	
+	theCanvasLayer.penColor = function() {
+		return context.strokeStyle;
+	}
+	
+	theCanvasLayer.isActivelyDrawing = function() {
+		return isDrawing;
+	}
+	
+	return theCanvasLayer;
+}
+
 var newWhiteBoard = function() {
 	var theWhiteboard = {};
 	var otherLayers = {};
 	var canvas = document.getElementById("my_canvas");
-	var context = canvas.getContext('2d');
+	var myLayer = newCanvasLayer($(canvas));
 	var isDrawing = false;
-	context.strokeStyle = 'red';
-	context.lineWidth = 5;
-	context.lineCap = "round";
 	var socketToServer = io.connect();
 
 	theWhiteboard.drawAt = function(x, y) {
-		if(isDrawing){
-			colorCoordinate(x,y);
-			socketToServer.emit('drawing', x, y, context.strokeStyle);
+		myLayer.continueDrawingAt(x, y);
+		if(myLayer.isActivelyDrawing()){ 
+			socketToServer.emit('drawing', x, y, myLayer.penColor);
 		}
 	};
 	
-	function colorCoordinate(x, y) {
-		if(!isDrawing){
-			context.beginPath();
-		    context.moveTo(x,y-5);
-	    }  
-		context.lineTo(x+2,y-5+2);
-		context.stroke();
-	}
-	
 	function newUserCanvas(id){
-		var newLayer = {};
-		newLayer.domID = "canvas_" + id;
-		newLayer.isDrawing = false;
-		newLayer.canvas = $("<canvas id='" + newLayer.domID + "' width='" + canvas.width + "' height='" + canvas.height + "'></canvas>");
-		return newLayer;
+		domID = "canvas_" + id;
+		return $("<canvas id='" + domID + "' width='" + canvas.width + "' height='" + canvas.height + "'></canvas>");
 	}
 	
-	function withColor(color, funcToCall){
-	  	var origColor = context.strokeStyle;
-		context.strokeStyle = color;
-		funcToCall();
-		context.strokeStyle = origColor	
-	}
 	theWhiteboard.startDrawingAt = function(x, y){
-		isDrawing = true;
-		context.beginPath();
-		colorCoordinate(x,y);
-		socketToServer.emit("start drawing", x, y, context.strokeStyle);
+	    myLayer.startDrawingAt(x, y)
+		socketToServer.emit("start drawing", x, y, myLayer.penColor());
 	}
 	theWhiteboard.stopDrawing = function(){
-		isDrawing = false;
-		context.stroke();
+		myLayer.stopDrawing();
 		socketToServer.emit("stop drawing");
 	}
 	theWhiteboard.setPenColor = function(color){
-		context.strokeStyle = color
+		myLayer.setColor(color);
 	};
 	theWhiteboard.clear = function() {
-		context.fillStyle = "#fff";
-		context.fillRect(0, 0, canvas.width, canvas.height);
+		//TODO
 	};
+	
+	function addLayerFor(id) {
+	  	var wrapper = $("#canvas_wrapper");
+		var nextUserLayer = newUserCanvas(id);
+		wrapper.append(nextUserLayer);
+		otherLayers[id] = newCanvasLayer(nextUserLayer);	
+	}
 	
 	socketToServer.on('start drawing', function(xCoord, yCoord, color, id) {
 	  var userDrawing = otherLayers[id];
 	  if(userDrawing) {
-	  	userDrawing.isDrawing = true;
-	  	userDrawing.context.beginPath();
-	  	userDrawing.context.moveTo(xCoord, yCoord);
-	  	userDrawing.context.lineTo(xCoord+2, yCoord+2);
-	  	userDrawing.context.stroke();
+	  	userDrawing.startDrawingAt(xCoord, yCoord, color);
 	  }
 	});
 	
 	socketToServer.on('drawing', function(xCoord, yCoord, color, id){
 		var userDrawing = otherLayers[id];
-		console.log("in the handler!");
-		  if(userDrawing && userDrawing.isDrawing) {
-			console.log("in the IF");
-		  	userDrawing.context.lineTo(xCoord+2, yCoord+2);
-		  	userDrawing.context.stroke();
-		  }
+		if(userDrawing) {
+		    userDrawing.continueDrawingAt(xCoord, yCoord);
+		}
 	});
 	
 	socketToServer.on('stop drawing', function(xCoord, yCoord, color, id) {
 	  var userDrawing = otherLayers[id];
 	  if(userDrawing) {
-	  	userDrawing.isDrawing = false;
-	  	userDrawing.context.stroke();
+	  	userDrawing.stopDrawing();
 	  }
 	});
 	
 	socketToServer.on('user count', function(count){
-		var wrapper = $("#canvas_wrapper");
 		for(var i=1; i <= count; i++){
-		  var nextUserLayer = newUserCanvas(i);
-		  otherLayers[i] = nextUserLayer;
-		  wrapper.append(nextUserLayer.canvas);
-		  nextUserLayer.context = document.getElementById(nextUserLayer.domID).getContext("2d");
-		  otherLayers[i] = nextUserLayer;	
+		  addLayerFor(i);
 		}
 	});
 	
 	socketToServer.on('user joined', function(userID) {
-	    var wrapper = $("#canvas_wrapper");
-		var nextUserLayer = newUserCanvas(userID);
-		wrapper.append(nextUserLayer.canvas);
-		nextUserLayer.context = document.getElementById(nextUserLayer.domID).getContext("2d");
-		otherLayers[userID] = nextUserLayer;	
+	    addLayerFor(userID)
 	});
 	
 	
-	socketToServer.on	
 	return theWhiteboard;
 }
 

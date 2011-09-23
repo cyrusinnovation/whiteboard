@@ -54,6 +54,10 @@ io.sockets.on('connection', function (socket) {
 	socket.on('drawing', function(xCoord, yCoord, color){
 	  socket.broadcast.emit('drawing', xCoord, yCoord, color, socket.userID);	
 	});
+	
+	socket.on('disconnect', function() {
+		//TODO: remove canvas? not sure....
+	})
 });
 
 console.log("Express server listening on port %d in %s mode", app.address().port, app.settings.env);

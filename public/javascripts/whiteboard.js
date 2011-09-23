@@ -44,6 +44,11 @@ var newCanvasLayer = function(elem) {
 		return isDrawing;
 	}
 	
+	theCanvasLayer.clear = function() {
+		context.fillStyle = "#fff";
+		context.fillRect(0, 0, 599, 500);
+	}
+	
 	return theCanvasLayer;
 }
 
@@ -79,7 +84,10 @@ var newWhiteBoard = function() {
 		myLayer.setColor(color);
 	};
 	theWhiteboard.clear = function() {
-		//TODO
+		myLayer.clear();
+		for(id in otherLayers){
+			otherLayers[id].clear();
+		}
 	};
 	
 	function addLayerFor(id) {

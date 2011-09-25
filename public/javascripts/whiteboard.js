@@ -46,7 +46,7 @@ var newCanvasLayer = function(elem) {
 	
 	theCanvasLayer.clear = function() {
 		context.fillStyle = "#fff";
-		context.fillRect(0, 0, 599, 500);
+		context.fillRect(0, 0, 799, 500);
 	}
 	
 	return theCanvasLayer;
@@ -137,7 +137,6 @@ $(document).ready(function() {
 
 	$("#my_canvas").mousedown(function(e){
 		whiteboard.startDrawingAt(e.layerX, e.layerY);
-		whiteboard.drawAt(e.layerX, e.layerY);
 	});
 	$("#my_canvas").mouseup(function(){
 		whiteboard.stopDrawing();
